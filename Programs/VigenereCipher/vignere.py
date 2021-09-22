@@ -28,13 +28,26 @@ def decrypt(cipher, key):
             keyIndexInAlphabet = letters.index(key[keyIndex].lower())
             if cipher[i].isupper():
                 cipherIndex = letters.index(cipher[i]) - 26
-                plaintext += letters[((26 + cipherIndex - keyIndexInAlphabet) % 26)]
+                plaintext += letters[((26 + cipherIndex - keyIndexInAlphabet) % 26)].upper()
             else:
                 cipherIndex = letters.index(cipher[i])
                 plaintext += letters[((26 + cipherIndex - keyIndexInAlphabet) % 26)]
             keyIndex += 1
     
     return plaintext
+
+def extendKey(key, plaintext):
+    new_key = key
+    key_index = 0
+    for i in range(len(plaintext) - len(key)):
+        new_key += key[key_index]
+        if key_index >= len(key):
+            key_index = 0
+        else:
+            key_index += 1
+
+    return new_key
+
 
 def main():
     numOfArgs = len(sys.argv)
@@ -47,23 +60,22 @@ def main():
         sys.exit()
 
     key = sys.argv[2]
-    if len(key) < len(sys.argv[1]):
-        key_index = 0
-        for i in range(len(sys.argv[1]) - len(key)):
-            key += key[key_index]
-            if key_index >= len(key):
-                i = 0
-            else:
-                i += 1 
 
     if sys.argv[1] == '-e':
+        cipher = ""
         for line in sys.stdin:
-            cipher = encrypt(line, sys.argv[2])
-            print(cipher)
+            if len(key) < len(line):
+                key = extendKey(key, line)
+            cipher += encrypt(line, key)
+        print('\n'+ cipher)
+                
     elif sys.argv[1] == '-d':
+        plaintext = ""
         for line in sys.stdin:
-            plaintext = decrypt(line, sys.argv[2])
-            print(plaintext)
+            if len(key) < len(line):
+                key = extendKey(key, line)
+            plaintext += decrypt(line, key)
+        print('\n' + plaintext)
     else:
         print("Not a valid option")
         sys.exit()
