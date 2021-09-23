@@ -13,7 +13,7 @@ DEBUG2 = False
 def checkCase(letter):
     if ((ord(letter) > 64) and (ord(letter) < 91)):
         return "upper"
-    elif ((ord(letter) > 96) and (ord(letter) < 122)):
+    elif ((ord(letter) > 96) and (ord(letter) < 123)):
         return "lower"
 
 # encoding message function
@@ -37,22 +37,29 @@ def encode(plaintext):
     while (len(keyList) < len(text)):
         keyList.append(keyList[currIndex])
         currIndex += 1
+    currIndex = 0
 
     for i in range(0,len(text)):
         # plaintext character is a capital letter
         if checkCase(text[i]) == "upper":
-            if checkCase(keyList[i]) == "lower":
-                encodedChar = chr(((((ord(text[i])-65) + (ord(keyList[i])-32-65))) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
+            if checkCase(keyList[currIndex]) == "lower":
+                encodedChar = chr(((((ord(text[i])-65) + (ord(keyList[currIndex])-32-65))) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
             else:
-                encodedChar = chr(((((ord(text[i])-65) + (ord(keyList[i])-65))) % 26) + 65)
+                encodedChar = chr(((((ord(text[i])-65) + (ord(keyList[currIndex])-65))) % 26) + 65)
             outputString += encodedChar
+            currIndex += 1
         # plaintext character is a lowercase letter
         elif checkCase(text[i]) == "lower":
-            if checkCase(keyList[i]) == "upper":
-                encodedChar = chr(((((ord(text[i])-97) + (ord(keyList[i])+32-97))) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
+            if checkCase(keyList[currIndex]) == "upper":
+                encodedChar = chr(((((ord(text[i])-97) + (ord(keyList[currIndex])-65))) % 26) + 97)  # need getting the correct character when the cases of the text and key are different - T.O.
             else:
-                encodedChar = chr(((((ord(text[i])-97) + (ord(keyList[i])-97))) % 26) + 97)
-            outputString += encodedChar  
+                encodedChar = chr(((((ord(text[i])-97) + (ord(keyList[currIndex])-97))) % 26) + 97)
+            outputString += encodedChar
+            currIndex += 1
+        # if the plaintext character is a newline character
+        elif (text[i] == "\n"):
+            outputString += "\n"
+            currIndex = 0
         # plaintext character is anything else, just repeat the character      
         else:
             outputString += text[i]
@@ -78,27 +85,35 @@ def decode(ciphertext):
         if char != " ":
             keyList.append(char)
 
-    currIndex = 0
+    ##currIndex = 0
 
     while (len(keyList) < len(text)):
-        keyList.append(keyList[currIndex])
+        keyList.append(keyList[currIndex].lower())
         currIndex += 1
 
+    currIndex = 0
+
     for i in range(0,len(text)):
-        # plaintext character is a capital letter
+    # plaintext character is a capital letter
         if checkCase(text[i]) == "upper":
-            if checkCase(keyList[i]) == "lower":
-                encodedChar = chr(((((ord(text[i])-65) - (ord(keyList[i])-97))) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
+            if checkCase(keyList[currIndex]) == "lower":
+                encodedChar = chr(((((ord(text[i])-65) - (ord(keyList[currIndex])-32-65))) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
             else:
-                encodedChar = chr(((((ord(text[i])-65) - (ord(keyList[i])-65))) % 26) + 65)
+                encodedChar = chr(((((ord(text[i])-65) - (ord(keyList[currIndex])-65))) % 26) + 65)
             outputString += encodedChar
+            currIndex += 1
         # plaintext character is a lowercase letter
         elif checkCase(text[i]) == "lower":
-            if checkCase(keyList[i]) == "upper":
-                encodedChar = chr((((ord(text[i])-97) - (ord(keyList[i])+32-97)) % 26) + 65)  # need getting the correct character when the cases of the text and key are different - T.O.
+            if checkCase(keyList[currIndex]) == "upper":
+                encodedChar = chr(((((ord(text[i])-97) - (ord(keyList[currIndex])+32-97))) % 26) + 97)  # need getting the correct character when the cases of the text and key are different - T.O.
             else:
-                encodedChar = chr((((ord(text[i])-97) - (ord(keyList[i])-97)) % 26) + 97)
-            outputString += encodedChar  
+                encodedChar = chr(((((ord(text[i])-97) - (ord(keyList[currIndex])-97))) % 26) + 97)
+            outputString += encodedChar
+            currIndex += 1
+        # if the plaintext character is a newline character
+        elif (text[i] == "\n"):
+            outputString += "\n"
+            currIndex = 0  
         # plaintext character is anything else, just repeat the character      
         else:
             outputString += text[i]
