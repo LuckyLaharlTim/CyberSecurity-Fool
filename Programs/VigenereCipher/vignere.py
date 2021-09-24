@@ -4,6 +4,10 @@ def encrypt(plaintext, key):
     cipher = ""
     keyIndex = 0
     for i in range(len(plaintext)):
+        if keyIndex >= len(key):
+            keyIndex = 0
+        if not key[keyIndex].isalpha():
+            keyIndex += 1
         if not plaintext[i].isalpha():
             cipher += plaintext[i]
         else:
@@ -22,6 +26,10 @@ def decrypt(cipher, key):
     plaintext = ""
     keyIndex = 0
     for i in range(len(cipher)):
+        if keyIndex >= len(key):
+            keyIndex = 0
+        if not key[keyIndex].isalpha():
+            keyIndex += 1
         if not cipher[i].isalpha():
             plaintext += cipher[i]
         else:
@@ -35,7 +43,7 @@ def decrypt(cipher, key):
             keyIndex += 1
     
     return plaintext
-
+'''
 def extendKey(key, plaintext):
     new_key = key
     key_index = 0
@@ -47,7 +55,7 @@ def extendKey(key, plaintext):
             key_index += 1
 
     return new_key
-
+'''
 
 def main():
     numOfArgs = len(sys.argv)
@@ -64,16 +72,12 @@ def main():
     if sys.argv[1] == '-e':
         cipher = ""
         for line in sys.stdin:
-            if len(key) < len(line):
-                key = extendKey(key, line)
             cipher += encrypt(line, key)
         print('\n'+ cipher)
                 
     elif sys.argv[1] == '-d':
         plaintext = ""
         for line in sys.stdin:
-            if len(key) < len(line):
-                key = extendKey(key, line)
             plaintext += decrypt(line, key)
         print('\n' + plaintext)
     else:
