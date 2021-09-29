@@ -30,7 +30,7 @@ outputString = ""
 # display the folder contents
 for f in files:
 	if METHOD == "7":
-		if f[0] == "-" and f[1] == "-" and f[2] == "-":
+		if f[0] == "-" and f[1] == "-" and f[2] == "-": # JC added this line to omit all files with anything in the first 3 spaces
 			permissions = f[3:10]      
 			binary = "0b"
 			for i in range(len(permissions)):
