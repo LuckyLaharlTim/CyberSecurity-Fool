@@ -29,20 +29,17 @@ ftp.quit()
 outputString = ""
 # display the folder contents
 for f in files:
-    if METHOD == "7": 
-        permissions = f[3:10]      
-        binary = "0b"
-        for i in range(len(permissions)):
-            if permissions[i] == "-":
-                binary += "0"
-            else:
-                binary += "1"
-        print(permissions)
-        print(binary)
+	if METHOD == "7":
+		if f[0] == "-" and f[1] == "-" and f[2] == "-":
+			permissions = f[3:10]      
+			binary = "0b"
+			for i in range(len(permissions)):
+				if permissions[i] == "-":
+					binary += "0"
+				else:
+					binary += "1"
+#			print(permissions)
+#			print(binary)
+			outputString += chr(int(binary, 2))
 
-#    outputString += chr(int(binary, 2))
-
-
-#print(outputString)
-
-
+print(outputString)
