@@ -113,4 +113,4 @@ print(outputString)
 ##  Attempted to add 10 bit method, message will print out but with a lot of "noise" before and after
 
 ## Josh; 9-30-21
-## Commented large portion of the code and made few minor improvements
+## Commented large portion of the code and made a few minor improvements
