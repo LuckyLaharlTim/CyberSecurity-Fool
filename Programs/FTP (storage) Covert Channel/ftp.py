@@ -1,7 +1,7 @@
 ##################################
 # Team Name:    The Fool
-# Assignment:   Binary Decoder
-# Date:         29 September 2021
+# Assignment:   FTP
+# Date:         1 October 2021
 ##################################
 
 # use Python 3
