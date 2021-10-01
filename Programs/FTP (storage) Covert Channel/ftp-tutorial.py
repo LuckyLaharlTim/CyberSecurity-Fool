@@ -48,7 +48,7 @@ for f in files:
 					binary += "1"
 			outputString += chr(int(binary, 2))
 	elif METHOD == "10":
-		permissions += f[:10]
+		permissions = f[:10]
 		for i in range(len(permissions)):
 			if permissions[i] == "-":
 				binary += "0"
