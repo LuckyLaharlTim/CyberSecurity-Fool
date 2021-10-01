@@ -9,7 +9,7 @@
 from ftplib import FTP
 
 # specifies the number of bits the cipher will be broken down into
-METHOD = "10"
+METHOD = "7"
 
 # FTP server details
 IP = "138.47.157.5"
@@ -48,53 +48,53 @@ for f in files:
         # 7 bit message
 	if METHOD == "7":
 
-            if f[:3] == "---": # JC added this line to omit all files with anything in the first 3 spaces
+		if f[:3] == "---": # JC added this line to omit all files with anything in the first 3 spaces
 
-                # Getting the 7 rightmost bits from the permissions  
-	        permissions = f[3:10]      
+			# Getting the 7 rightmost bits from the permissions  
+			permissions = f[3:10]      
 
-                # The resulting binary string cannot be converted unless it is preceded by '0b' (at least in python)
-		binary = "0b"
+			# The resulting binary string cannot be converted unless it is preceded by '0b' (at least in python)
+			binary = "0b"
 
-		for i in range(len(permissions)):
+			for i in range(len(permissions)):
 
-                    # If the character in permissions is a dash then store a 0 in the binary string
-		    if permissions[i] == "-":
-		        binary += "0"
+				# If the character in permissions is a dash then store a 0 in the binary string
+				if permissions[i] == "-":
+					binary += "0"
 
-                    # Any other character in permissions will be stored as a 1 in the binary string 
-		    else:
-			binary += "1"
+				# Any other character in permissions will be stored as a 1 in the binary string 
+				else:
+					binary += "1"
 
-                # Converting the binary string back to a character and storing it in the output string 
-		outputString += chr(int(binary, 2))
+			# Converting the binary string back to a character and storing it in the output string 
+			outputString += chr(int(binary, 2))
 
         # 10 bit message 
 	elif METHOD == "10":
 
                 # Getting all ten characters from permissions 
-		permissions += f[:10]
+		permissions = f[:10]
 		for i in range(len(permissions)):
                  
-                    # If the character in permissions is a dash then store a 0 in the binary string
-		    if permissions[i] == "-":
-		        binary += "0"
+			# If the character in permissions is a dash then store a 0 in the binary string
+			if permissions[i] == "-":
+				binary += "0"
 
-                    # Any other character in permissions will be stored as a 1 in the binary string
-		    else:
-		        binary += "1"
+			# Any other character in permissions will be stored as a 1 in the binary string
+			else:
+				binary += "1"
 
-                    # Once the binary string reaches 7 bits 
-		    if len(binary) == 7:
+			# Once the binary string reaches 7 bits 
+			if len(binary) == 7:
 
-                        # Prepend the '0b' to the binary string for proper conversion
-		        binary  = "0b{}".format(binary)
+				# Prepend the '0b' to the binary string for proper conversion
+				binary  = "0b{}".format(binary)
 
-                        # Converting the binary string back to a character and storing it in the output string
-			outputString += chr(int(binary, 2))
+				# Converting the binary string back to a character and storing it in the output string
+				outputString += chr(int(binary, 2))
 
-                        # Clearing the binary string 
-			binary = ""
+				# Clearing the binary string 
+				binary = ""
 
 # Printing out the decoded message
 print(outputString)
@@ -114,3 +114,6 @@ print(outputString)
 
 ## Josh; 9-30-21
 ## Commented large portion of the code and made a few minor improvements
+
+## Zach; 10-1-21
+## Fixed tab inconsistancy and added a bug fix from another prototype file.
