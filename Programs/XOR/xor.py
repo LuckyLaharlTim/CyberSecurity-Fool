@@ -1,32 +1,43 @@
 ##################################
 # Team Name:    The Fool
 # Assignment:   XOR Crypto
-# Date:         Late October 2021
+# Date:         29 October 2021
 ##################################
 
-import sys # import sys for standard input from command line
+import sys
 
-DEBUG = True
-KEY = open("key")
-outputBin = b'0'
+DEBUG = False
+KEY_DIR = "key"
 
-key = KEY.read()
-KEY.close()
-keyBytes = bytearray(key, 'utf-8')
+#If -k argument exists, replace KEY_DIR with text behind -k
+for i in range(0,len(sys.argv)):
+    if (sys.argv[i] == '-k'):
+        KEY_DIR = sys.argv[i+1]
+
+#Read STDIN
+message = bytearray(sys.stdin.buffer.read())
+
+#Read key file
+f = open(KEY_DIR,'rb')
+key = bytearray(f.read())
+f.close()
+
+#Debug print
 if DEBUG:
-    print("{}\n\n{}\n\n".format(key, keyBytes))
+    print(message)
+    print(key)
 
-text = sys.stdin.buffer.read()
-#textBytes = bytearray(text, 'utf-8')
-if DEBUG:
-    print(text)
+#If key isn't long enough, wrap it until it is.
+while len(key) < len(message):
+    key = key*2
 
-for i in range(0, len(keyBytes)):   # gives an error, use 'min(len(text),len(keyBytes))' to bypass for now
-    outputBin += b'{}'.format(text[i] ^ keyBytes[i])
+#XOR Cipher
+result = bytearray(len(message))
+for i in range(0, len(message)):
+    result[i] = message[i] ^ key[i]
 
-sys.stdout.buffer.write(outputBin)    
-
-
+#Print result
+sys.stdout.buffer.write(result)
 
 ## Git Changes
     
@@ -34,17 +45,5 @@ sys.stdout.buffer.write(outputBin)
 ##  Name of coder; Date of change
 ##  Description of changes
 
-##  Timothy Oliver; 10/11/2021
-##  - I made a preliminary attempt at the code
-##  - Despite the fact that the ciphertext and key are
-##     of the same size, their byte arrays are of different lengths
-##  - Couldn't get the outputBin variable to be the appropriate type
-##     for the stdout.buffer.write function
-
-
-
-
-
-
-    
-
+##  Zach and Josh; 10/12/2021
+##  -Initial commit, comments, and -k flag.
