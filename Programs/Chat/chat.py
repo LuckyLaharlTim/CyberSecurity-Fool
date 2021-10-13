@@ -11,14 +11,14 @@ from time import time
 from binascii import hexlify, unhexlify
 
 # enables debugging output
-DEBUG = False
+DEBUG = True
 MESSAGE = True
 ZERO = 0.025
 ONE = 0.05
 
 # set the server's IP address and port
-ip = "138.47.99.64" # options: "localhost" - "138.47.99.64"
-port = 1337 # options: "1337" or "12000"
+ip = "138.47.99.64" # options for assignment: "localhost" - "138.47.99.64"
+port = 1337 # options for assignment: "1337" or "12000"
 
 # make list to append delays between characters
 # delays = []
@@ -26,6 +26,9 @@ port = 1337 # options: "1337" or "12000"
 covert_bin = ""
 covert = ""
 i = 0
+checkEOF = False
+piece = 0
+
 
 # create the socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,6 +37,9 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((ip, port))
 
 # receive data until EOF
+if MESSAGE:
+        stdout.write("Overt Message:\n")
+        stdout.flush()
 data = s.recv(4096).decode()
 while (data.rstrip("\n") != "EOF"):
         # output the data
@@ -51,6 +57,7 @@ while (data.rstrip("\n") != "EOF"):
                 covert_bin += "1"
         else:
                 covert_bin += "0"
+        # display delays if in Debug Mode
         if (DEBUG):
                 stdout.write("\n{}\n".format(delta))
                 stdout.flush()                
@@ -61,26 +68,41 @@ s.close()
 
 if DEBUG:
         print(covert_bin)
-while (i < len(covert_bin)):
+        
+# Convert covert_bin to a character every 8 bits
+while (i < len(covert_bin)):    # maybe len(cover_bin)-8 to get rid of last character (hopefully EOF)
         #process 1 byte at a time
         b = covert_bin[i:i+8]
         # convert it to ASCII
         n = int("0b{}".format(b), 2)
-##        # if you want to force the covert message to stop, unsuccessful
-##        if (chr(n) == "EOF"):
-##            break
-##        else:
+        # show each character in covert (to determine if EOF is one or three
+        if DEBUG:
+            stdout.write(chr(n)+"\n")
+            stdout.flush()
+        # if not currently looking for "EOF", start process
+        if ((piece == 0) and (chr(n) == "E")):
+            checkEOF = True
         try:
-                covert += chr(n)
+            covert += chr(n)
         except TypeError:
-                covert += "?"
+            covert += "?"
+        if (checkEOF):
+            piece+=1
+        # if 3 chars since E, see if we have EOF and stop if so
+        if (piece == 3):
+            if (covert[-3:] == "EOF"):
+                covert = covert[:-3]
+                break
+            else:
+                piece = 0
+                checkEOF = False
+
         # stop at the string "EOF"
         i +=8
 
 # write covert message
-stdout.write(" {}\n".format(covert))
+stdout.write("\nCovert Message:\n{}\n".format(covert))
 stdout.flush()
-
 
 # code update
 ##        Timothy Oliver; 10-11-21
@@ -101,8 +123,14 @@ stdout.flush()
 ##         properly display in Linux
 ##      - added some other constants to streamline
 ##         debugging and displaying overt message
-
-
+##
+##
+##      Timothy Oliver; 10-13-21
+##      - added debug lines that confirmed EOF was actually the characters 'E',
+##         'O', and 'F' as apposed to an ASCII character
+##      - used string operations to check for EOF at end of output
+##
+##
 
 
         
