@@ -101,7 +101,7 @@ while (i < len(covert_bin)):    # maybe len(cover_bin)-8 to get rid of last char
         i +=8
 
 # write covert message
-stdout.write("\nCovert Message:\n{}\n".format(covert))
+stdout.write("\nCovert Message: {}\n".format(covert))
 stdout.flush()
 
 # code update
