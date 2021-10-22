@@ -4,7 +4,9 @@ from random import uniform
 from termios import tcflush, TCIFLUSH
 from sys import stdin, stdout
 
-keyboard = Controller()
+###############################################################
+## get string and timings that we'll use for the dynamic typing
+###############################################################
 
 password = input()
 timings = input()
@@ -23,6 +25,14 @@ keypress = timings[:len(timings) // 2 + 1]
 keyinterval = timings[len(timings) // 2 + 1:]
 #print(f"KHTs = {keypress}")
 #print(f"KITs = {keyinterval}")
+
+########################
+## start typing password
+########################
+keyboard = Controller()
+
+## sleep line so we can move cursor to appropriate place
+sleep(5.0)
 
 for x in range(len(password)):
     keyboard.press(password[x])
