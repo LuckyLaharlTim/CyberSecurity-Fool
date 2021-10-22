@@ -1,39 +1,36 @@
-from sys import stdin
+from pynput.keyboard import Controller
+from time import sleep
+from random import uniform
+from termios import tcflush, TCIFLUSH
+from sys import stdin, stdout
 
-def getInfo():
-    password = []
-    timings = []
-    keypress = []
-    keyinterval = []
-    wholepassword = ""
-    inp = stdin.read()
+keyboard = Controller()
 
-    for line in inp:
-        if(line[0].isalpha()):
-            password.append(line)
-        elif(line[0].isnumeric()):
-            timings.append(line)
-   #password = input()
-   #timings = input()
+password = input()
+timings = input()
 
-    #print(f"Features = {password}")
-    #print(f"Timings = {timings}")
-    
-    for i in range(0,len(password)):
-        password[i] = password[i].split(",")
-        password[i] = password[i][:len(password[i])//2+1]
-        password[i] = "".join(password[i])
-    #print(f"Sample = \"{password}\"")
+#print(f"Features = {password}")
+#print(f"Timings = {timings}")
 
-    for i in range(0,len(password)):
-        wholepassword += password[i] 
+password = password.split(",")
+password = password[:len(password) // 2 + 1]
+password = "".join(password)
+#print(f"Sample = \"{password}\"")
 
-    for i in range(0,len(timings)):
-        timings[i] = timings[i].split(',')
-        timings[i] = [float(a) for a in timings[i]]
-        keypress.append(timings[i][:len(timings[i])//2+1])
-        keyinterval.append(timings[i][len(timings[i])//2+1:])
-    #print(f"KHTs = {keypress}\nKITs = {keyinterval}")
+timings = timings.split(",")
+timings = [ float(a) for a in timings ]
+keypress = timings[:len(timings) // 2 + 1]
+keyinterval = timings[len(timings) // 2 + 1:]
+#print(f"KHTs = {keypress}")
+#print(f"KITs = {keyinterval}")
 
-    return wholepassword, keypress, keyinterval
+for x in range(len(password)):
+    keyboard.press(password[x])
 
+    if (x < len(keypress) - 1):
+        sleep(keyinterval[x])
+        
+    keyboard.release(password[x])
+
+tcflush(stdout, TCIFLUSH)
+print()
