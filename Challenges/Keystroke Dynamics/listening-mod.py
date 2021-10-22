@@ -43,6 +43,6 @@ for i in range(1,len(string)):
 
 for i in range(0,len(keyinterval)):
     keypress.append(keyinterval[i])
-stdout.write(", ".join(string))
+stdout.write(", ".join(string).replace(" ", ""))
 stdout.write("\n")
-stdout.write(str(keypress).strip("[]"))
+stdout.write(str(keypress).strip("[]").replace(" ", ""))
