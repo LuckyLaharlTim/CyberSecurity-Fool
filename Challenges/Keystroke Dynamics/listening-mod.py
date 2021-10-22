@@ -12,6 +12,8 @@ times = ""
 global t_0, t_1, t0, t1
 
 def pressing(key):
+    if (key == Key.esc):
+        return False
     global t_0, t_1, t0, t1
     if (len(keypress) > 0):
         t_1 = time()
@@ -21,17 +23,14 @@ def pressing(key):
        string.append(key.char)
        #print (key.char)#print(key.char.encode("ascii"), end = ' ')
     except AttributeError:
-        t0 = time()
-        string.append(str(key))
+       t0 = time()
+       string.append(str(key))
 
 
 def releasing(key):
     global t_0, t_1, t0, t1
-    if (key == Key.esc):
-        return False
-    else:
-        t1 = t_0 = time()
-        keyinterval.append(t1-t0)
+    t1 = t_0 = time()
+    keypress.append(t1-t0)
 
 
 with Listener(on_press=pressing, on_release=releasing) as listener:
@@ -39,19 +38,11 @@ with Listener(on_press=pressing, on_release=releasing) as listener:
 
 tcflush(stdin, TCIFLUSH)
 
-# make first line of input file
-for i in range(0,len(string)):
-    keys += (f"{string[i]},")
-for i in range(0,len(string)-1):
-    keys += (f"{string[i]}{string[i+1]},")
+for i in range(1,len(string)):
+    string.append(f"{string[i-1]}{string[i]}")
 
-# make second line of input file
-for i in range(0,len(keypress)):
-    times += (f"{keypress[i]},")
 for i in range(0,len(keyinterval)):
-    times += (f"{keyinterval[i]},")
-
-
-
-stdout.write(f"{keys}\n{times}")
-
+    keypress.append(keyinterval[i])
+stdout.write(", ".join(string))
+stdout.write("\n")
+stdout.write(str(keypress).strip("[]"))
