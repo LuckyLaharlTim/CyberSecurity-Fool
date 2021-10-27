@@ -6,7 +6,7 @@ wrapper_file = ""
 hidden_file = ""
 storing = True
 byte_method = True
-global SENTINEL = 
+global SENTINEL 
 
 
 for i in range(len(sys.argv)):
