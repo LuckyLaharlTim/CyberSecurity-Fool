@@ -64,6 +64,32 @@ def storeBit(wrapper, hidden, offset, interval):
         i += 1
 
 
+def retriBit(wrapper, offset, interval):
+    global SENTINEL
+
+    hidden = bytearray() # hidden bytes
+    while(offset < len(wrapper)):
+        b = 0
+
+        for j in range(8):
+            b |= (wrapper[offset] & 00000001)
+            if(j < 7):
+                b <<= 1
+                offset += interval
+        
+        # check if b matches a sentinel byte
+        if(not sentinelCheck(wrapper,offset,interval)):
+            #if not, add the byte to H
+            hidden.extend(wrapper[offset])
+            offset += interval
+        else:
+
+            return hidden
+            
+        offset += interval
+    return hidden
+    
+
 def retriByte(wrapper, offset, interval):
     global SENTINEL
     hidden = bytearray()
