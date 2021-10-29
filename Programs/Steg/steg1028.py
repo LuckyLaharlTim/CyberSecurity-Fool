@@ -84,8 +84,7 @@ def storeBit(wrapper, hidden, offset, interval):
             offset += interval
         i += 1
     return wrapper
-
-
+'''
 def retriBit(wrapper, offset, interval):
     global SENTINEL
     found = False
@@ -101,7 +100,7 @@ def retriBit(wrapper, offset, interval):
             offset += interval
         hidden.append(b)
         # check if b matches a sentinel byte
-        '''if (not sentinelCheck(wrapper, offset, interval)):
+        if (not sentinelCheck(wrapper, offset, interval)):
             # if not add the byte to H
             hidden.append(b)
             offset += interval
@@ -109,17 +108,55 @@ def retriBit(wrapper, offset, interval):
         else:
             # continue checking
             for i in range(len(SENTINEL)):
-                if(hidden[i] != SENTINEL[i]):
+                if(hidden[i-len(SENTINEL)] != SENTINEL[i]):
                     break
                 elif(i == len(SENTINEL)-1):
                     hidden = hidden[:-len(SENTINEL)]
                     found = True
 
         hidden.append(b)
-        offset += interval'''
+        offset += interval
     return hidden
+'''
+
+def retriBit(wrapper, offset, interval):
+
+    global SENTINEL
+    SEN_L = len(SENTINEL)
+    found = False
+    hidden = bytearray() # empty byte array
 
 
+    #loop until the sentinel is found or once there is not enough bytes left
+    while(not found and offset + 7 < len(wrapper)):
+
+        hiddenByte = 0
+        for j in range(8):
+            # and the wrapper byte with 1 to get the value of the least significant bit
+            bit = (wrapper[offset] & 0b00000001)
+
+            # or the wrapper byte witht he current hiddenByte to change the LSB
+            # of the hiddenByte to the proper bit without changing the remaning bits
+            hiddenByte |= bit
+
+            # expect for the 8th bit, shift the hiddenByte 1 to the left
+            if(j < 7):
+                hiddenByte <<= 1
+
+            offset += interval
+        #add
+        hidden.append(hiddenByte)
+        # check if b matches a sentinel byte
+        if (len(hidden) >= SEN_L):
+            for i in range(SEN_L):
+                if (hidden[i-SEN_L] != SENTINEL[i]):
+                    break
+
+                elif(i == SEN_L-1):
+                    hidden = hidden[:-SEN_L]
+                    found = True
+
+    return hidden
 
 
 def retriByte(wrapper, offset, interval):
