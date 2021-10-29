@@ -23,10 +23,11 @@ def argCheck(flag):
             return True
     return False
 
+# add -r flag for real current time
 if (argCheck("-r")):
     now = datetime.now()
     utc_now = now.astimezone(pytz.utc)
-    
+# for ease of checking with pdf, set current time to specified string    
 else:
     now_str = "2021 10 29 11 41 00"
 
