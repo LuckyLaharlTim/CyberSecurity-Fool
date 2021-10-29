@@ -38,7 +38,7 @@ local_datetime = local_time.localize(naive_datetime)
 utc_now = local_datetime.astimezone(pytz.utc)
 
 if (DEBUG):
-    print(utc_datetime)
+    print(utc_now)
     
 date = []
 
@@ -103,7 +103,9 @@ for char in str(md5_2.hexdigest()[::-1]):
         # If the length of the code is four then break out of the loop
         if (len(code) == 4):
             break
-        
+
+code += str(md5_2.hexdigest())[len(str(md5_2.hexdigest())) // 2]
+
 if (DEBUG):
     print(code)
 

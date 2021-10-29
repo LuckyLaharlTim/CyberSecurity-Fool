@@ -3,7 +3,7 @@ import sys
 def sentinelCheck(wrapper, offset, interval, index = 0):
     global SENTINEL
 
-    #If the byte equals the sentinel at the current index, return the result of calling the function with index + 1
+    #Run a while loop that checks for the sentinel bytes.
     ##print(f"{wrapper[offset]} = {SENTINEL[index]}")
     ##print(f"{offset} | {index}")
     while (index < len(SENTINEL)):
