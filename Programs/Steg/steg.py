@@ -2,7 +2,7 @@ import sys
 
 def sentinelCheck(wrapper, offset, interval, index = 0):
     global SENTINEL
-    
+
     #If the byte equals the sentinel at the current index, return the result of calling the function with index + 1
     ##print(f"{wrapper[offset]} = {SENTINEL[index]}")
     ##print(f"{offset} | {index}")
@@ -13,26 +13,26 @@ def sentinelCheck(wrapper, offset, interval, index = 0):
         else:
             return False
     return True
-           
-    
-    
+
+
+
 def storeByte(wrapper, hidden, offset, interval):
     global SENTINEL
     i = 0
-    
+
     #For byte in hidden file
     while (i < len(hidden)):
-        
+
         #Store the byte in the offset index
         wrapper[offset] = hidden[i]
-        
+
         #increment by offset
         offset += interval
         i += 1
     i = 0
-    
+
     #Repeat above for the sentinel.
-    while (i< len(SENTINEL)):
+    while (i < len(SENTINEL)):
         wrapper[offset] = SENTINEL[i]
         offset += interval
         i += 1
@@ -42,10 +42,10 @@ def storeBit(wrapper, hidden, offset, interval):
     i = 0
     j = 0
     while(i < len(hidden)):
-        while(j < 7):
+        while(j < 8):
             wrapper[offset] &= 11111110
             wrapper[offset] |= ((hidden[i] & 10000000) >> 7)
-            hidden[i] <<= 1
+            hidden[i] = (hidden[i] << 1) & (2 ** 7)
             offset += interval
             j += 1
         i += 1
@@ -53,54 +53,89 @@ def storeBit(wrapper, hidden, offset, interval):
     i = 0
     j = 0
     while(i < len(SENTINEL)):
-        while(j < 7):
+        while(j < 8):
             wrapper[offset] &= 11111110
             wrapper[offset] |= ((SENTINEL[i] & 10000000) >> 7)
-            SENTINEL[i] <<= 1
+            SENTINEL[i] = (SENTINEL[i] << 1) & (2 ** 7)
             offset += interval
             j += 1
         i += 1
+    return wrapper
 
+'''
+def storeBit(wrapper, hidden, offset, interval):
+    i = 0
+    while i < len(hidden):
+        for j in range(8):
+            wrapper[offset] &= 11111110
+            wrapper[offset] |= ((hidden[i] & 10000000) >> 7)
+            hidden[i] = (hidden[i] << 1) & (2 ** 7)
+            offset += interval
+        
+        i += 1
+
+    i = 0
+
+    while i < len(SENTINEL):
+        for j in range(8):
+            wrapper[offset] &= 11111110
+            wrapper[offset] |= ((SENTINEL[i] & 10000000) >> 7)
+            SENTINEL[i] = (SENTINEL[i] << 1) & (2 ** 7)
+            offset += interval
+        i += 1
+    return wrapper
+'''
 
 def retriBit(wrapper, offset, interval):
     global SENTINEL
-
-    hidden = bytearray() # hidden bytes
-    while(offset < len(wrapper)):
-        # check if b matches a sentinel byte
-        if(not sentinelCheck(wrapper,offset,interval)):
-            #if not, add the byte to H
-            hidden.append(wrapper[offset])
-            offset += interval
-            b = 0
-
-            for j in range(8):
-                b |= (wrapper[offset] & 0b00000001)
-                if(j < 7):
-                    b <<= 1
-                    offset += interval
-        
-        else:
-            return hidden
+    found = False
+    hidden = bytearray() # empty byte array
+    #loop until the sentinel is found or once there is not enough bytes left
+    while(not found and offset + 7 < len(wrapper)):
+        b = 0
+        for j in range(8):
+            b |= (wrapper[offset] & 0b00000001)
+            if(j < 7):
+                b <<= 1
             
-        offset += interval
+            offset += interval
+        hidden.append(b)
+        # check if b matches a sentinel byte
+        '''if (not sentinelCheck(wrapper, offset, interval)):
+            # if not add the byte to H
+            hidden.append(b)
+            offset += interval
+        # if byte matches the sentinel bytes
+        else:
+            # continue checking
+            for i in range(len(SENTINEL)):
+                if(hidden[i] != SENTINEL[i]):
+                    break
+                elif(i == len(SENTINEL)-1):
+                    hidden = hidden[:-len(SENTINEL)]
+                    found = True
+
+        hidden.append(b)
+        offset += interval'''
     return hidden
-    
+
+
+
 
 def retriByte(wrapper, offset, interval):
     global SENTINEL
     hidden = bytearray()
     i = 0
     while (i < len(wrapper)):
-        
+
         #if the sentinel bytes haven't been reached yet
         if (not sentinelCheck(wrapper, offset, interval)):
-            
+
             #add the byte at the offset to the result file and increment by interval
             hidden.append(wrapper[offset])
             offset += interval
         else:
-            
+
             #sentinel byte was found, EOF
             return hidden
     return hidden
@@ -163,12 +198,12 @@ if (storing):
 if (storing and byte_method):
     sys.stdout.buffer.write(storeByte(wrapper_bytes, hidden_bytes,
                                       offset, interval))
-    
+
 # If the parameters specified storage using the bit method
 elif (storing and not byte_method):
     sys.stdout.buffer.write(storeBit(wrapper_bytes, hidden_bytes,
                                       offset, interval))
-    
+
 # If the parameters specified retrieval using the byte method
 elif (not storing and byte_method):
     sys.stdout.buffer.write(retriByte(wrapper_bytes, offset, interval))
