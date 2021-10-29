@@ -24,18 +24,20 @@ def argCheck(flag):
     return False
 
 if (argCheck("-r")):
-    now_str = datetime.now()
+    now = datetime.now()
+    utc_now = now.astimezone(pytz.utc)
+    
 else:
-    now_str = "2017 04 23 18 02 30"
+    now_str = "2021 10 29 11 41 00"
 
-# Converting the current time to a datetime object  
-naive_datetime = datetime.strptime(now_str, "%Y %m %d %H %M %S")
+    # Converting the current time to a datetime object  
+    naive_datetime = datetime.strptime(now_str, "%Y %m %d %H %M %S")
 
-# Localizing the current time to the timezone given in the 'local_time' variable
-local_datetime = local_time.localize(naive_datetime)
+    # Localizing the current time to the timezone given in the 'local_time' variable
+    local_datetime = local_time.localize(naive_datetime)
 
-# Converting current time from the local timezone time 
-utc_now = local_datetime.astimezone(pytz.utc)
+    # Converting current time from the local timezone time 
+    utc_now = local_datetime.astimezone(pytz.utc)
 
 if (DEBUG):
     print(utc_now)
