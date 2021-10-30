@@ -107,7 +107,8 @@ for char in str(md5_2.hexdigest()[::-1]):
         if (len(code) == 4):
             break
 
-code += str(md5_2.hexdigest())[len(str(md5_2.hexdigest())) // 2]
+# add the middle character to the end of the code (for challenge)
+#code += str(md5_2.hexdigest())[len(str(md5_2.hexdigest())) // 2]
 
 if (DEBUG):
     print(code)
