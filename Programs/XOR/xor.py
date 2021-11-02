@@ -4,6 +4,18 @@
 # Date:         29 October 2021
 ##################################
 
+##################################
+# Manual
+# python xor.py (-k key_file) < input > output
+# Flags:
+# -k | specifies the key file; can also be done
+#    | in the KEY_DIR variable
+# Notes:
+#   Use notepad or similar to try to determine the
+# file type after decoding.
+#   Make sure to set the correct KEY_DIR or use -k
+##################################
+
 import sys
 
 DEBUG = False
