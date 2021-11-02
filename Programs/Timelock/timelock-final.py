@@ -1,12 +1,12 @@
-#### MANUAL ####
-# - Epoch time is given through standard input
-# - Current time can be set inside the code (via the
-# now_str variable) or the current system time can be
-# used by adding '-r' to command line arguments.
-# - Output it written to standard output
-# EXAMPLE: "1999 12 31 23 59 59" | python3 timelock.py -r
-# --This example passes in the epoch time via standard input
-# and uses the current system time for the 'now' time--
+##################################
+# Manual
+# echo "[epoch_time]" | python3 timelock-final.py
+# - This method requires you to set the 'now' time in the code
+#   via the 'now_str' variable
+# OR
+# echo "[epoch_time]" | python3 timelock-final.py -r
+# - This method uses the current system time as the 'now' time
+##################################
 
 ##################################
 # Team Name:    The Fool
