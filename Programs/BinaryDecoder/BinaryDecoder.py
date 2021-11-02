@@ -4,6 +4,19 @@
 # Date:         24 September 2021
 ##################################
 
+##################################
+# Manual
+# python BinaryDecoder.py <flags> < input > output
+# Flags:
+# -7 | will force 7 bit decoding
+# -8 | will force 8 bit decoding
+# -e | will print out which bit method is used.
+# Notes:
+# If the bits provided to the program are not divisible 
+# by 7 or 8, or by whichever flag used, no output will be
+# given.
+##################################
+
 import sys # import sys for standard input from command line
 
 DEBUG = False
