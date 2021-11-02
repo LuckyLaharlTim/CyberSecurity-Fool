@@ -1,5 +1,15 @@
 import sys
 
+##################################
+# Manual
+# python BitConvert.py <flags> < input > output
+# Flags:
+# -0 | will define what is considered a 0
+# -1 | will define what is considered a 1
+# Notes:
+# The flags can be used or the variables below.
+##################################
+
 #What is a zero and what is a one? Put the characters here, or use -0 and -1.
 ONE = ""
 ZERO = ""
