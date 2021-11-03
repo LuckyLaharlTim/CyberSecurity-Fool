@@ -1,3 +1,33 @@
+'''
+==============================
+MANUAL
+==============================
+
+python steg.py -<sr> -<bB> -o<val> [-i<val>] -w<val> [-h<val>]
+-s      store
+-r      retrieve
+-b      bit mode
+-B      byte mode
+-o<val> set offset (default is 0)
+-i<val> set interval (default is 1)
+-w<val> set wrapper file. (this is the file you are storing something into or pulling something from)
+-h<val> set hidden file. (this is the file that is being hidden in the wrapper)
+
+======================================================
+NOTES
+======================================================
+- Retrieval will only require a wrapper file so -h is not needed.
+
+- Storage requires a wrapper file, and this file must be able to 
+contain the hidden file.
+
+
+'''
+
+
+
+
+
 ##############################
 ## Team Name:   The Fool
 ## Program:     Steg
