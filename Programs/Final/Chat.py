@@ -21,13 +21,18 @@ for each character. There should be a 2 distinct
 values that you can observe for the times.
 
 - Choosing values for ZERO and ONE will require some guesswork
+        ~ NOTE: you should guess around
+                5/10ths below the intervals you are seeing in debug 
+        ~ example: 
+                you receive intervals around 0.25 and 0.5;
+                 set ONE to 0.45
 
 - Pick a time based on the distinctive values and assign one
 to each
 
-- If they dont work, first flip them and retry
+- If they don't work, first flip them and retry
 
-- If they still dont work choose new values
+- If they still don't work, choose new values
 '''
 
 
