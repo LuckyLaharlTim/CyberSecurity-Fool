@@ -24,6 +24,66 @@ DEBUG = False
 # Relevant second interval 
 INTERVAL = 60
 
+# general format for getting output code:
+#   <position relative to other char type>
+#   <number of such characters to obtain>
+#   <LR = 'left to right', RL = the opposite>
+#   ex: letters = "25RL" means after getting numbers, 
+#       get first 5 letters in hash from right to left
+letters = "12LR"
+numbers = "22RL"
+
+
+# method to get the code (for easy changes)
+def getCode(hash, letters, numbers):
+
+    code = ""
+    # check which comes first
+    if (letters[0] == "1"):
+        code += getLetters(hash, letters)
+        code += getNumbers(hash, numbers)
+    elif (numbers[0] == "1"):
+        code += getNumbers(hash, numbers)
+        code += getLetters(hash, letters)
+    # add the last character to the end of the code (for challenge)
+    #code += str(md5_2.hexdigest())[len(str(md5_2.hexdigest()))-1]
+
+    return code
+
+# getting the letters and numbers for the final code
+def getLetters(hashstr, direct):
+    code = ""
+    letCount = 0
+    if (direct[2:] == "RL"):
+        hashstr = hashstr[::-1]
+    for char in hashstr:
+        if(char.isalpha() and (letCount < int(direct[1]))):
+            if char.isalpha():
+                code += char
+                letCount += 1
+
+    return code
+
+
+def getNumbers(hashstr, direct):
+    code = ""
+    numCount = 0
+
+    if (direct[2:] == "RL"):
+        hashstr = hashstr[::-1]
+    for char in hashstr:
+        # python2 does not include str.isnumeric()
+        try:
+            if ((int(char) > -1) and (numCount < int(direct[1]))):
+                code += char
+                numCount+=1
+            elif not(numCount < int(direct[1])):
+                break
+        except ValueError:
+            pass
+
+    return code
+
 # Local time zone 
 local_time = pytz.timezone("US/Central")
 
@@ -89,7 +149,11 @@ if (DEBUG):
     print(md5_2.hexdigest())
 
 # Empty string that will hold the resulting code 
-code = ""
+code = getCode(md5_2.hexdigest(), letters, numbers)
+
+
+
+''' Old process for getting code
 
 # For every character in the md5_2 hash string 
 for char in md5_2.hexdigest():
@@ -116,6 +180,7 @@ for char in str(md5_2.hexdigest()[::-1]):
         # If the length of the code is four then break out of the loop
         if (len(code) == 4):
             break
+'''
 
 # add the middle character to the end of the code (for challenge)
 #code += str(md5_2.hexdigest())[len(str(md5_2.hexdigest())) // 2]
